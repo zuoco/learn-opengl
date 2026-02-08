@@ -1,0 +1,68 @@
+# Copyright © SixtyFPS GmbH <info@slint.dev>
+# SPDX-License-Identifier: GPL-3.0-only OR LicenseRef-Slint-Royalty-free-2.0 OR LicenseRef-Slint-Software-3.0
+
+name: autofix.ci  # needed to securely identify the workflow
+
+on:
+  pull_request:
+    branches: [master, "feature/*", "pre-release/*"]
+  push:
+    branches: [master, "feature/*", "pre-release/*"]
+  workflow_dispatch:
+  merge_group:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+    CARGO_INCREMENTAL: false
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+    format_fix:
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        steps:
+            - uses: actions/checkout@v6
+            - uses: jdx/mise-action@v3
+              with:
+                version: 2025.9.18
+                log_level: debug
+            - name: Install rust dependencies
+              run: rustup toolchain install stable-x86_64-unknown-linux-gnu --profile default
+            - name: Run fixes
+              run: mise run --force --jobs=1 'ci:autofix:fix'
+            - name: Suggest format changes
+              uses: autofix-ci/action@635ffb0c9798bd160680f18fd73371e355b85f27
+
+    lint_typecheck:
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        steps:
+            - uses: actions/checkout@v6
+            - uses: jdx/mise-action@v3
+              with:
+                version: 2025.9.18
+                log_level: debug
+            - name: Install rust dependencies
+              run: rustup toolchain install stable-x86_64-unknown-linux-gnu --profile default
+            - name: Run lints
+              run: mise run --force --jobs=1 'ci:autofix:lint'
+
+    ci:
+        needs: [format_fix, lint_typecheck]
+        permissions:
+            contents: read
+            deployments: write
+            pull-requests: read
+        uses: ./.github/workflows/ci.yaml
+        secrets:
+            ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+            ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+            CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+            CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+            READ_WRITE_PRIVATE_KEY: ${{ secrets.READ_WRITE_PRIVATE_KEY }}

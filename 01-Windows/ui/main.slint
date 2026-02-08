@@ -1,0 +1,15 @@
+export component MainWindow inherits Window {
+    title: "Soft Renderer";
+    width: 800px;
+    height: 600px;
+    background: black;
+
+    callback close-requested();
+
+    // 主画布区域
+    Rectangle {
+        width: 100%;
+        height: 100%;
+        background: black;
+    }
+}
