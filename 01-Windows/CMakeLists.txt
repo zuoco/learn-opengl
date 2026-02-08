@@ -19,7 +19,6 @@ find_package(Fontconfig REQUIRED)
 find_package(PkgConfig REQUIRED)
 
 
-
 set(SOURCES
     src/main.cpp
     src/application.h
