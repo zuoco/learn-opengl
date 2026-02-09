@@ -23,7 +23,7 @@ void GPU::clear() {
 }
 
 void GPU::drawPoint(const uint32_t& x, const uint32_t& y, const RGBA& color) {
-    // 从窗口左下角开始算起
-    uint32_t pixelPos = y * mFrameBuffer->mWidth + x;
+    // 从窗口左下角开始算起: 一个二维坐标系（X  Y）
+    uint32_t pixelPos = x + y * mFrameBuffer->mWidth;
     mFrameBuffer->mColorBuffer[pixelPos] = color;
 }

@@ -6,7 +6,7 @@
 
 /*
 * class GPU：
-* 模拟GPU的绘图行为以及算法等
+* 模拟 GPU 的绘图行为以及算法等
 */
 class GPU {
 public:
