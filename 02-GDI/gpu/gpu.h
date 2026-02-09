@@ -2,7 +2,7 @@
 #include "../global/base.h"
 #include "frameBuffer.h"
 
-#define sgl GPU::getInstance()
+#define sgl (&GPU::getInstance())
 
 /*
 * class GPU£º
@@ -10,8 +10,7 @@
 */
 class GPU {
 public:
-    static GPU* getInstance();
-    GPU();
+    static GPU& getInstance();
 
     ~GPU();
 
@@ -28,7 +27,9 @@ public:
     FrameBuffer* getFrameBuffer() const { return mFrameBuffer; }
 
 private:
-    static GPU* mInstance;
+    GPU();
+    GPU(const GPU&) = delete;
+    GPU& operator=(const GPU&) = delete;
 
     FrameBuffer* mFrameBuffer{ nullptr };
 };

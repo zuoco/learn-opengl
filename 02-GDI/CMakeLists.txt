@@ -1,23 +1,23 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.21)
 
 project(Graphic VERSION 1.0.0 LANGUAGES CXX)
 
-# 设置编译器为 clang
-set(CMAKE_C_COMPILER clang)
-set(CMAKE_CXX_COMPILER clang++)
-
-# 导出 compile_commands.json 用于 clangd
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_C_COMPILER clang)
+set(CMAKE_CXX_COMPILER clang++)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
+# 使用本地 slint
+set(Slint_DIR "${CMAKE_CURRENT_SOURCE_DIR}/slint/lib/cmake/Slint")
+find_package(Slint REQUIRED)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Quick Qml)
+# 查找依赖
+find_package(Freetype REQUIRED)
+find_package(Fontconfig REQUIRED)
+find_package(PkgConfig REQUIRED)
 
-# 源文件
 set(SOURCES
     main.cpp
     application/application.h
@@ -28,15 +28,7 @@ set(SOURCES
     gpu/frameBuffer.cpp
 )
 
-# QML 资源
-set(QML_RESOURCES
-    qml/qml.qrc
-)
-
-qt_add_executable(softRenderer
-    ${SOURCES}
-    ${QML_RESOURCES}
-)
+add_executable(softRenderer ${SOURCES})
 
 target_include_directories(softRenderer PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -45,8 +37,22 @@ target_include_directories(softRenderer PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/gpu
 )
 
+pkg_check_modules(LIBINPUT REQUIRED libinput)
+pkg_check_modules(XKBCOMMON REQUIRED xkbcommon)
+pkg_check_modules(UDEV REQUIRED libudev)
+pkg_check_modules(GBM REQUIRED gbm)
+pkg_check_modules(SEAT REQUIRED libseat)
+
 target_link_libraries(softRenderer PRIVATE
-    Qt6::Core
-    Qt6::Quick
-    Qt6::Qml
+    Slint::Slint
+    Fontconfig::Fontconfig
+    Freetype::Freetype
+    ${LIBINPUT_LIBRARIES}
+    ${XKBCOMMON_LIBRARIES}
+    ${UDEV_LIBRARIES}
+    ${GBM_LIBRARIES}
+    ${SEAT_LIBRARIES}
 )
+
+# 编译 Slint UI 文件
+slint_target_sources(softRenderer ui/main.slint)

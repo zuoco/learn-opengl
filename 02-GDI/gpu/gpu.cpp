@@ -1,12 +1,8 @@
 #include "gpu.h"
 
-GPU* GPU::mInstance = nullptr;
-GPU* GPU::getInstance() {
-    if (!mInstance) {
-        mInstance = new GPU();
-    }
-
-    return mInstance;
+GPU& GPU::getInstance() {
+    static GPU instance;
+    return instance;
 }
 
 GPU::GPU() {}

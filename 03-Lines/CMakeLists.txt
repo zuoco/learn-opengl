@@ -1,39 +1,60 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.21)
 
-project(LinesQt VERSION 1.0 LANGUAGES CXX)
+project(Graphic VERSION 1.0.0 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+set(CMAKE_C_COMPILER clang)
+set(CMAKE_CXX_COMPILER clang++)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Quick)
+# 使用本地 slint
+set(Slint_DIR "${CMAKE_CURRENT_SOURCE_DIR}/slint/lib/cmake/Slint")
+find_package(Slint REQUIRED)
 
-qt_standard_project_setup(REQUIRES 6.5)
+# 查找依赖
+find_package(Freetype REQUIRED)
+find_package(Fontconfig REQUIRED)
+find_package(PkgConfig REQUIRED)
 
-qt_add_executable(softRenderer
+set(SOURCES
     main.cpp
-    canvasprovider.h
-    canvasprovider.cpp
-    global/base.h
+    application/application.h
+    application/application.cpp
+    gpu/gpu.h
+    gpu/gpu.cpp
     gpu/frameBuffer.h
     gpu/frameBuffer.cpp
     gpu/raster.h
     gpu/raster.cpp
-    gpu/gpu.h
-    gpu/gpu.cpp
 )
 
-qt_add_qml_module(softRenderer
-    URI LinesQt
-    VERSION 1.0
-    QML_FILES
-        qml/Main.qml
+add_executable(softRenderer ${SOURCES})
+
+target_include_directories(softRenderer PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/global
+    ${CMAKE_CURRENT_SOURCE_DIR}/application
+    ${CMAKE_CURRENT_SOURCE_DIR}/gpu
 )
 
-target_link_libraries(softRenderer PRIVATE Qt6::Quick)
+pkg_check_modules(LIBINPUT REQUIRED libinput)
+pkg_check_modules(XKBCOMMON REQUIRED xkbcommon)
+pkg_check_modules(UDEV REQUIRED libudev)
+pkg_check_modules(GBM REQUIRED gbm)
+pkg_check_modules(SEAT REQUIRED libseat)
 
-set_target_properties(softRenderer PROPERTIES
-    WIN32_EXECUTABLE TRUE
-    MACOSX_BUNDLE TRUE
+target_link_libraries(softRenderer PRIVATE
+    Slint::Slint
+    Fontconfig::Fontconfig
+    Freetype::Freetype
+    ${LIBINPUT_LIBRARIES}
+    ${XKBCOMMON_LIBRARIES}
+    ${UDEV_LIBRARIES}
+    ${GBM_LIBRARIES}
+    ${SEAT_LIBRARIES}
 )
+
+# 编译 Slint UI 文件
+slint_target_sources(softRenderer ui/main.slint)

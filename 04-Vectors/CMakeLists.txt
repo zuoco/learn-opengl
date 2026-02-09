@@ -1,18 +1,68 @@
-#需求的最低cmake程序版本
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.21)
 
-#本工程的名字
-project(Graphic)
+project(Graphic VERSION 1.0.0 LANGUAGES CXX)
 
-#本工程支持的C++版本
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_subdirectory(application)
-add_subdirectory(gpu)
+set(CMAKE_C_COMPILER clang)
+set(CMAKE_CXX_COMPILER clang++)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-#本工程所有cpp文件编译链接，生成exe
-add_executable(softRenderer "main.cpp")
-add_executable(testMath "testMath.cpp")
+# 使用本地 slint
+set(Slint_DIR "${CMAKE_CURRENT_SOURCE_DIR}/slint/lib/cmake/Slint")
+find_package(Slint REQUIRED)
 
-target_link_libraries(softRenderer applicationLib gpuLib)
+# 查找依赖
+find_package(Freetype REQUIRED)
+find_package(Fontconfig REQUIRED)
+find_package(PkgConfig REQUIRED)
 
+set(SOURCES
+    main.cpp
+    application/application.h
+    application/application.cpp
+    gpu/gpu.h
+    gpu/gpu.cpp
+    gpu/frameBuffer.h
+    gpu/frameBuffer.cpp
+    gpu/raster.h
+    gpu/raster.cpp
+)
+
+add_executable(softRenderer ${SOURCES})
+
+# 数学库测试程序
+add_executable(testMath testMath.cpp)
+
+target_include_directories(softRenderer PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/global
+    ${CMAKE_CURRENT_SOURCE_DIR}/application
+    ${CMAKE_CURRENT_SOURCE_DIR}/gpu
+)
+
+target_include_directories(testMath PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/global
+)
+
+pkg_check_modules(LIBINPUT REQUIRED libinput)
+pkg_check_modules(XKBCOMMON REQUIRED xkbcommon)
+pkg_check_modules(UDEV REQUIRED libudev)
+pkg_check_modules(GBM REQUIRED gbm)
+pkg_check_modules(SEAT REQUIRED libseat)
+
+target_link_libraries(softRenderer PRIVATE
+    Slint::Slint
+    Fontconfig::Fontconfig
+    Freetype::Freetype
+    ${LIBINPUT_LIBRARIES}
+    ${XKBCOMMON_LIBRARIES}
+    ${UDEV_LIBRARIES}
+    ${GBM_LIBRARIES}
+    ${SEAT_LIBRARIES}
+)
+
+# 编译 Slint UI 文件
+slint_target_sources(softRenderer ui/main.slint)

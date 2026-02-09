@@ -2,7 +2,7 @@
 #include "../global/base.h"
 #include "frameBuffer.h"
 
-#define sgl GPU::getInstance()
+#define sgl (&GPU::getInstance())
 
 /*
  * class GPU:
@@ -10,8 +10,8 @@
  */
 class GPU {
 public:
-    static GPU* getInstance();
-    GPU();
+    static GPU& getInstance();
+
     ~GPU();
 
     // 接受外界传入的buffer对应的内存指针以及窗体的宽/高
@@ -28,7 +28,9 @@ public:
     FrameBuffer* getFrameBuffer() const { return mFrameBuffer; }
 
 private:
-    static GPU* mInstance;
+    GPU();
+    GPU(const GPU&) = delete;
+    GPU& operator=(const GPU&) = delete;
 
     FrameBuffer* mFrameBuffer{ nullptr };
 };

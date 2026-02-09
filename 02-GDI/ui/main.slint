@@ -1,0 +1,17 @@
+export component MainWindow inherits Window {
+    title: "Soft Renderer - GDI";
+    width: 800px;
+    height: 600px;
+    background: black;
+
+    callback close-requested();
+
+    in property <image> frame-buffer;
+
+    // 主画布区域
+    Image {
+        width: 100%;
+        height: 100%;
+        source: root.frame-buffer;
+    }
+}

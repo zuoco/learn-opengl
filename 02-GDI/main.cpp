@@ -1,47 +1,60 @@
-#include <QGuiApplication>
-#include <QQmlApplicationEngine>
-#include <QTimer>
+#include "main.h"
 #include "application/application.h"
 #include "gpu/gpu.h"
 
 /*
 * 课程内容介绍：
-* 1 GDI 绘制环境搭建 -> Qt-QML 环境
+* 1 GDI 绘制环境搭建 -> Slint 环境
 * 2 搭建模拟GPU的代码架构
 * 3 点的绘制实践
 */
 
 int main(int argc, char *argv[])
 {
-    QGuiApplication qtApp(argc, argv);
-    
-    // 获取 Application 单例并初始化
-    Application& appInstance = Application::getInstance();
-    
+    // 获取 Application 单例
+    Application& app = Application::getInstance();
+
     // 初始化 GPU
-    sgl->initSurface(appInstance.getWidth(), appInstance.getHeight());
-    
-    QQmlApplicationEngine engine;
-    
-    // 创建并注册图像提供者（Qt 会接管所有权）
-    FrameImageProvider* imageProvider = new FrameImageProvider();
-    appInstance.setImageProvider(imageProvider);
-    engine.addImageProvider(QStringLiteral("frameProvider"), imageProvider);
-    
-    const QUrl url(QStringLiteral("qrc:/main.qml"));
-    
-    QObject::connect(&engine, &QQmlApplicationEngine::objectCreationFailed,
-        &qtApp, []() { QCoreApplication::exit(-1); },
-        Qt::QueuedConnection);
-    
-    engine.load(url);
-    
-    // 创建渲染定时器
-    QTimer renderTimer;
-    QObject::connect(&renderTimer, &QTimer::timeout, [&appInstance]() {
-        appInstance.render();
+    sgl->initSurface(app.getWidth(), app.getHeight());
+
+    auto mainWindow = MainWindow::create();
+
+    mainWindow->on_close_requested([&app]() {
+        app.quit();
     });
-    renderTimer.start(16); // 约60fps
-    
-    return qtApp.exec();
+
+    // 创建渲染定时器，约60fps
+    slint::Timer renderTimer(std::chrono::milliseconds(16), [&mainWindow, &app]() {
+        if (!app.isAlive()) return;
+
+        // 渲染一帧
+        app.render();
+
+        // 从 GPU FrameBuffer 构建 Slint Image
+        FrameBuffer* fb = sgl->getFrameBuffer();
+        if (!fb) return;
+
+        int width = fb->mWidth;
+        int height = fb->mHeight;
+
+        slint::SharedPixelBuffer<slint::Rgba8Pixel> pixelBuffer(width, height);
+        auto *dest = pixelBuffer.begin();
+
+        // 垂直翻转：GPU 从左下角开始绘制，Slint 从左上角开始
+        for (int y = 0; y < height; ++y) {
+            int srcY = height - 1 - y;
+            for (int x = 0; x < width; ++x) {
+                int srcPos = srcY * width + x;
+                RGBA& pixel = fb->mColorBuffer[srcPos];
+                int destPos = y * width + x;
+                dest[destPos] = slint::Rgba8Pixel{ pixel.mR, pixel.mG, pixel.mB, pixel.mA };
+            }
+        }
+
+        mainWindow->set_frame_buffer(slint::Image(pixelBuffer));
+    });
+
+    mainWindow->run();
+
+    return 0;
 }
