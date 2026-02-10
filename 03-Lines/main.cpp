@@ -3,9 +3,8 @@
 #include "gpu/gpu.h"
 
 /*
- * 课程内容介绍：
- * 1 光栅化Raster类设计
- * 2 Brensenham算法实现
+ * 1 光栅化 Raster类 设计
+ * 2 Brensenham 算法实现
  * 3 直线算法测试
  */
 

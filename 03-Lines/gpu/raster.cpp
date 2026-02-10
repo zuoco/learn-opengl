@@ -5,10 +5,7 @@ Raster::Raster() {}
 
 Raster::~Raster() {}
 
-void Raster::rasterizeLine(
-    std::vector<Point>& results,
-    const Point& v0,
-    const Point& v1) {
+void Raster::rasterizeLine( std::vector<Point>& results, const Point& v0, const Point& v1) {
 
     Point start = v0;
     Point end = v1;
@@ -82,17 +79,24 @@ void Raster::rasterizeLine(
     }
 }
 
+
 void Raster::interpolantLine(const Point& v0, const Point& v1, Point& target) {
+    // 计算插值权重： 
+    // weight = 0：目标点在起点位置
+    // weight = 1：目标点在终点位置
+    // weight = 0.5：目标点在直线中点
     float weight = 1.0f;
     if (v1.x != v0.x) {
         // 用x做比例
         weight = (float)(target.x - v0.x) / (float)(v1.x - v0.x);
     } else if (v1.y != v0.y) {
+        // 如果x方向上没有位移
         // 用y做比例
         weight = (float)(target.y - v0.y) / (float)(v1.y - v0.y);
     }
 
     RGBA result;
+    // 目标颜色 = 终点颜色 × weight + 起点颜色 × (1 - weight)
     result.mR = static_cast<byte>(static_cast<float>(v1.color.mR) * weight + (1.0f - weight) * static_cast<float>(v0.color.mR));
     result.mG = static_cast<byte>(static_cast<float>(v1.color.mG) * weight + (1.0f - weight) * static_cast<float>(v0.color.mG));
     result.mB = static_cast<byte>(static_cast<float>(v1.color.mB) * weight + (1.0f - weight) * static_cast<float>(v0.color.mB));

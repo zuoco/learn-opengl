@@ -6,7 +6,7 @@
 
 /*
  * class GPU:
- * 模拟GPU的绘图行为以及算法等
+ * 模拟 GPU 的绘图行为以及算法等
  */
 class GPU {
 public:
@@ -14,7 +14,7 @@ public:
 
     ~GPU();
 
-    // 接受外界传入的buffer对应的内存指针以及窗体的宽/高
+    // 接受外界传入的 buffer 对应的内存指针以及窗体的宽/高
     void initSurface(const uint32_t& width, const uint32_t& height, void* buffer = nullptr);
 
     // 清除画布内容
