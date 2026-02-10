@@ -1,17 +1,29 @@
+// 定义了一个名为 `MainWindow` 的组件
+// 继承自 Slint 的 `Window` 基类
+// `export` 关键字表示这个组件可以被其他模块使用
 export component MainWindow inherits Window {
     title: "Soft Renderer - GDI";
     width: 800px;
     height: 600px;
     background: black;
 
+    // 声明一个名为 `close-requested` 的回调
+    // 用于处理窗口关闭请求事件
+    // 外部代码可以连接到这个回调来执行关闭前的清理工作
     callback close-requested();
 
+    // 声明一个输入属性 `frame-buffer`，类型为 `image`
+    // `in` 表示这是一个输入属性，可以从外部设置
+    // 这个属性用于接收渲染后的帧缓冲区数据
+    // slint编译器会生成set_frame_buffer() 和 get_frame_buffer(), 以便于C++中调用。
     in property <image> frame-buffer;
 
-    // 主画布区域
+    // 主画布区域： 图像组件
     Image {
         width: 100%;
         height: 100%;
+        // 图像源绑定到根组件的 `frame-buffer` 属性
+        // 这样每当 `frame-buffer` 更新时，显示的图像也会更新
         source: root.frame-buffer;
     }
 }

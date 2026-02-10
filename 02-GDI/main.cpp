@@ -31,10 +31,10 @@ int main(int argc, char *argv[])
         {
                 if (!app.isAlive()) return;
 
-                // 渲染一帧: 调用 Application::render() 方法生成一帧图像内容
+                // 1. GPU 渲染一帧数据: 调用 Application::render() 方法生成一帧图像内容
                 app.render();
 
-                // 从 GPU帧缓冲区 获取渲染完成的帧缓冲区数据
+                // 2. 从 GPU帧缓冲区 获取渲染完成的帧缓冲区数据
                 FrameBuffer* fb = sgl->getFrameBuffer();
                 if (!fb) return;
 
@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
                         int srcPos = srcY * width + x;
                         // 从帧缓冲区中拿到像素值
                         RGBA& pixel = fb->mColorBuffer[srcPos];
-                        
+
                         //  计算该像素在屏幕上的位置
                         int destPos = y * width + x;
                         dest[destPos] = slint::Rgba8Pixel{ pixel.mR, pixel.mG, pixel.mB, pixel.mA };
