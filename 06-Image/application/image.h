@@ -12,5 +12,6 @@ public:
 public:
     uint32_t mWidth{ 0 };
     uint32_t mHeight{ 0 };
+    // 像素RGBA数组
     RGBA* mData{ nullptr };
 };

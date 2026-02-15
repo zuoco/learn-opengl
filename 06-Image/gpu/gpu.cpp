@@ -33,16 +33,21 @@ void GPU::drawPoint(const uint32_t& x, const uint32_t& y, const RGBA& color) {
     }
 
     // 从窗口左下角开始算起
+    // x,y是二维坐标，但是内存是线性的，所以需要将这个二维坐标映射到线性数组上
     uint32_t pixelPos = y * mFrameBuffer->mWidth + x;
 
+    // 没有启用图像层混合
     RGBA result = color;
 
+    // 启用图层混合
     if (mEnableBlending) {
-        // 加入blending
+        // 新像素
         auto src = color;
+        // 原像素
         auto dst = mFrameBuffer->mColorBuffer[pixelPos];
         float weight = static_cast<float>(src.mA) / 255.0f;
 
+        // 混合
         result.mR = static_cast<float>(src.mR) * weight + static_cast<float>(dst.mR) * (1.0f - weight);
         result.mG = static_cast<float>(src.mG) * weight + static_cast<float>(dst.mG) * (1.0f - weight);
         result.mB = static_cast<float>(src.mB) * weight + static_cast<float>(dst.mB) * (1.0f - weight);
@@ -71,16 +76,21 @@ void GPU::drawTriangle(const Point& p1, const Point& p2, const Point& p3) {
 }
 
 void GPU::drawImage(const Image* image) {
+    // 列
     for (uint32_t i = 0; i < image->mWidth; ++i) {
+        // 列中的每一行
         for (uint32_t j = 0; j < image->mHeight; ++j) {
-            drawPoint(i, j, image->mData[j * image->mWidth + i]);
+            // image->mWidth * j + 1 : 获取当前像素RGBA 的索引位置
+            drawPoint(i, j, image->mData[image->mWidth * j + i]);
         }
     }
 }
 
 void GPU::drawImageWidthAlpha(const Image* image, const uint32_t& alpha) {
     RGBA color;
+    // 列
     for (uint32_t i = 0; i < image->mWidth; ++i) {
+        // 列中的每一行
         for (uint32_t j = 0; j < image->mHeight; ++j) {
             color = image->mData[j * image->mWidth + i];
             color.mA = alpha;
@@ -91,5 +101,9 @@ void GPU::drawImageWidthAlpha(const Image* image, const uint32_t& alpha) {
 
 // 设置状态
 void GPU::setBlending(bool enable) {
+    // Blend 有混合的意思
+    // RGBA四个通道中RGB负责颜色，A（alpha）负责透明度
+    // A = 1(255) : 表示完全不透明。
+    // A = 0(0) : 表示完全透明。
     mEnableBlending = enable;
 }

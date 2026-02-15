@@ -23,10 +23,14 @@ Image* Image::createImage(const std::string& path) {
 
     //stbimage读入的图片,原点在左上角，y轴是向下生长的
     //我方图形程序认为，图片应该是左下角为0，0；故需要翻转y轴
-    stbi_set_flip_vertically_on_load(true);
+    stbi_set_flip_vertically_on_load(true);  // 传入 `false` (零值)：加载图像时不进行垂直翻转
 
-    //由于我们是BGRA的格式，图片是RGBA的格式，所以得交换下R&B
+    // 从文件路径加载图像： width和height存储图像宽度高度
+    // picType： 图片的实际通道数
+    // STBI_rgb_alpha： 请求的通道数
     unsigned char* bits = stbi_load(path.c_str(), &width, &height, &picType, STBI_rgb_alpha);
+    
+    // 由于图片是BGRA的格式，Image是RGBA的格式，所以得交换下R和B
     for (int i = 0; i < width * height * 4; i += 4)
     {
         byte tmp = bits[i];

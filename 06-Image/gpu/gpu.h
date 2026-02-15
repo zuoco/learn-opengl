@@ -28,11 +28,13 @@ public:
 
     void drawTriangle(const Point& p1, const Point& p2, const Point& p3);
 
+
+    // 将完整图像绘制到帧缓冲。
     void drawImage(const Image* image);
 
     void drawImageWidthAlpha(const Image* image, const uint32_t& alpha);
 
-    // 设置状态
+    // 设置GPU的混合状态
     void setBlending(bool enable);
 
     FrameBuffer* getFrameBuffer() const { return mFrameBuffer; }
