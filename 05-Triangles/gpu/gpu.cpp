@@ -48,6 +48,7 @@ void GPU::drawLine(const Point& p1, const Point& p2) {
 
 void GPU::drawTriangle(const Point& p1, const Point& p2, const Point& p3) {
     std::vector<Point> pixels;
+    // 三角形光栅化
     Raster::rasterizeTriangle(pixels, p1, p2, p3);
 
     for (auto& p : pixels) {
