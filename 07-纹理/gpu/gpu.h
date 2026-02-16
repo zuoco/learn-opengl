@@ -22,6 +22,7 @@ public:
     // 清除画布内容
     void clear();
 
+    // 将像素绘制到帧缓存区
     // 传入像素位置，绘制成某种颜色
     void drawPoint(const uint32_t& x, const uint32_t& y, const RGBA& color);
 
@@ -36,8 +37,6 @@ public:
     // 设置状态
     void setBlending(bool enable);
 
-    void setBilinear(bool enable);
-
     void setTexture(Image* image);
 
     FrameBuffer* getFrameBuffer() const { return mFrameBuffer; }
@@ -48,13 +47,11 @@ private:
     GPU& operator=(const GPU&) = delete;
 
     RGBA sampleNearest(const math::vec2f& uv);
-    RGBA sampleBilinear(const math::vec2f& uv);
 
     bool mEnableBlending{ false };
-    bool mEnableBilinear{ false };
 
     FrameBuffer* mFrameBuffer{ nullptr };
 
-    // 纹理贴图
+    // 纹理
     Image* mImage{ nullptr };
 };

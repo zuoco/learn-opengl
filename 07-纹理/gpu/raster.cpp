@@ -103,11 +103,7 @@ void Raster::interpolantLine(const Point& v0, const Point& v1, Point& target) {
     target.color = result;
 }
 
-void Raster::rasterizeTriangle(
-    std::vector<Point>& results,
-    const Point& v0,
-    const Point& v1,
-    const Point& v2) {
+void Raster::rasterizeTriangle(std::vector<Point>& results, const Point& v0, const Point& v1, const Point& v2) {
     int maxX = static_cast<int>(std::max(v0.x, std::max(v1.x, v2.x)));
     int minX = static_cast<int>(std::min(v0.x, std::min(v1.x, v2.x)));
     int maxY = static_cast<int>(std::max(v0.y, std::max(v1.y, v2.y)));
@@ -131,6 +127,7 @@ void Raster::rasterizeTriangle(
             if (negativeAll || positiveAll) {
                 result.x = i;
                 result.y = j;
+                // 颜色、纹理的插值
                 interpolantTriangle(v0, v1, v2, result);
 
                 results.push_back(result);

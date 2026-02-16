@@ -19,13 +19,16 @@ std::string Application::getApplicationInfo() const
     return "Slint Application - Soft Renderer (UV)";
 }
 
-// 全局资源（与原始 main.cpp 中的逻辑一致）
+// 全局资源
+
+// 纹理
 static Image* texture = nullptr;
 static bool prepared = false;
 static Point p1, p2, p3;
 
 static void prepare()
 {
+    // 加载纹理
     texture = Image::createImage("assets/textures/goku.jpg");
 
     p1.x = 0;

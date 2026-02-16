@@ -36,6 +36,8 @@ public:
     // 设置状态
     void setBlending(bool enable);
 
+    void setBilinear(bool enable);
+
     void setTexture(Image* image);
 
     FrameBuffer* getFrameBuffer() const { return mFrameBuffer; }
@@ -45,9 +47,15 @@ private:
     GPU(const GPU&) = delete;
     GPU& operator=(const GPU&) = delete;
 
+    // 最近邻插值
+    // 不进行任何颜色混合，采样点落在哪个像素的范围内，就返回该像素的颜色
     RGBA sampleNearest(const math::vec2f& uv);
+    
+    // 双线性插值
+    RGBA sampleBilinear(const math::vec2f& uv);
 
     bool mEnableBlending{ false };
+    bool mEnableBilinear{ false };
 
     FrameBuffer* mFrameBuffer{ nullptr };
 

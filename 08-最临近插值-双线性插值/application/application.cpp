@@ -78,6 +78,6 @@ void Application::render()
     sgl->drawTriangle(p1, p2, p3);
 
     // 右侧三角形：双线性插值采样
-    sgl->setBilinear(true);
+    sgl->setBilinear(true);  // 启用双线性插值
     sgl->drawTriangle(q1, q2, q3);
 }

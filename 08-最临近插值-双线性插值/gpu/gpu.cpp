@@ -125,41 +125,46 @@ RGBA GPU::sampleNearest(const math::vec2f& uv) {
 
 RGBA GPU::sampleBilinear(const math::vec2f& uv) {
     RGBA resultColor;
+    
+    // uv: 当前像素的uv坐标 
 
     float x = uv.x * static_cast<float>(mImage->mWidth - 1);
     float y = uv.y * static_cast<float>(mImage->mHeight - 1);
 
     int left = std::floor(x);
     int right = std::ceil(x);
+
     int bottom = std::floor(y);
     int top = std::ceil(y);
 
-    //对上下插值，得到左右
+
+    // 计算垂直方向的插值权重
     float yScale = 0.0f;
     if (top == bottom) {
         yScale = 1.0f;
-    }
-    else {
+    } else {
         yScale = (y - static_cast<float>(bottom)) / static_cast<float>(top - bottom);
     }
 
     int positionLeftTop = top * mImage->mWidth + left;
     int positionLeftBottom = bottom * mImage->mWidth + left;
+
     int positionRightTop = top * mImage->mWidth + right;
     int positionRightBottom = bottom * mImage->mWidth + right;
 
+    // 使用[左上像素]和[左下像素]进行插值
     RGBA leftColor = Raster::lerpRGBA(mImage->mData[positionLeftBottom], mImage->mData[positionLeftTop], yScale);
+    // 使用[右上像素]和[右下像素]进行插值
     RGBA rightColor = Raster::lerpRGBA(mImage->mData[positionRightBottom], mImage->mData[positionRightTop], yScale);
 
-    //对左右插值，得到结果
+    // 获取水平方向的插值权重
     float xScale = 0.0f;
     if (right == left) {
         xScale = 1.0f;
-    }
-    else {
+    } else {
         xScale = (x - static_cast<float>(left)) / static_cast<float>(right - left);
     }
-
+    // 水平方向插值
     resultColor = Raster::lerpRGBA(leftColor, rightColor, xScale);
 
     return resultColor;

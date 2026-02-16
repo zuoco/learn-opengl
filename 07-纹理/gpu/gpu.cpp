@@ -68,9 +68,9 @@ void GPU::drawTriangle(const Point& p1, const Point& p2, const Point& p3) {
     RGBA resultColor;
     for (auto &p : pixels) {
         if (mImage) {
+            // 带有纹理的
             resultColor = sampleNearest(p.uv);
-        }
-        else {
+        } else {
             resultColor = p.color;
         }
 
