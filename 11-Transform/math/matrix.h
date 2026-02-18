@@ -1,6 +1,8 @@
 #pragma once
 #include <iostream>
 #include <assert.h>
+#include <cstdint>
+#include <cstring>
 #include "vector.h"
 
 namespace math {
@@ -45,10 +47,10 @@ namespace math {
 		}
 
 		Vector3<T> operator*(const Vector3<T>& v) {
-			return Vector3(
-				v.x * m0 + v.y * m3 + v.z * m6,
-				v.x * m1 + v.y * m4 + v.z * m7,
-				v.x * m2 + v.y * m5 + v.z * m8,
+			return Vector3<T>(
+				v.x * m[0] + v.y * m[3] + v.z * m[6],
+				v.x * m[1] + v.y * m[4] + v.z * m[7],
+				v.x * m[2] + v.y * m[5] + v.z * m[8]
 				);
 		}
 

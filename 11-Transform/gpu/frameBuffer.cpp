@@ -1,4 +1,5 @@
 #include "frameBuffer.h"
+#include <cstdint>
 
 FrameBuffer::FrameBuffer(uint32_t width, uint32_t height, void* buffer) {
 	mWidth = width;

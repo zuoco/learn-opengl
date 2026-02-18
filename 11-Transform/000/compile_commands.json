@@ -1,0 +1,50 @@
+[
+{
+  "directory": "/home/zcli/code/learn-opengl/11-Transform/000",
+  "command": "clang++ -I/home/zcli/code/learn-opengl/11-Transform -I/home/zcli/code/learn-opengl/11-Transform/global -I/home/zcli/code/learn-opengl/11-Transform/application -I/home/zcli/code/learn-opengl/11-Transform/gpu -I/home/zcli/code/learn-opengl/11-Transform/000 -isystem /home/zcli/code/learn-opengl/11-Transform/slint/include/slint -isystem /usr/include/freetype2 -std=gnu++20 -pthread -DWITH_GZFILEOP -o CMakeFiles/softRenderer.dir/main.cpp.o -c /home/zcli/code/learn-opengl/11-Transform/main.cpp",
+  "file": "/home/zcli/code/learn-opengl/11-Transform/main.cpp",
+  "output": "CMakeFiles/softRenderer.dir/main.cpp.o"
+},
+{
+  "directory": "/home/zcli/code/learn-opengl/11-Transform/000",
+  "command": "clang++ -I/home/zcli/code/learn-opengl/11-Transform -I/home/zcli/code/learn-opengl/11-Transform/global -I/home/zcli/code/learn-opengl/11-Transform/application -I/home/zcli/code/learn-opengl/11-Transform/gpu -I/home/zcli/code/learn-opengl/11-Transform/000 -isystem /home/zcli/code/learn-opengl/11-Transform/slint/include/slint -isystem /usr/include/freetype2 -std=gnu++20 -pthread -DWITH_GZFILEOP -o CMakeFiles/softRenderer.dir/application/application.cpp.o -c /home/zcli/code/learn-opengl/11-Transform/application/application.cpp",
+  "file": "/home/zcli/code/learn-opengl/11-Transform/application/application.cpp",
+  "output": "CMakeFiles/softRenderer.dir/application/application.cpp.o"
+},
+{
+  "directory": "/home/zcli/code/learn-opengl/11-Transform/000",
+  "command": "clang++ -I/home/zcli/code/learn-opengl/11-Transform -I/home/zcli/code/learn-opengl/11-Transform/global -I/home/zcli/code/learn-opengl/11-Transform/application -I/home/zcli/code/learn-opengl/11-Transform/gpu -I/home/zcli/code/learn-opengl/11-Transform/000 -isystem /home/zcli/code/learn-opengl/11-Transform/slint/include/slint -isystem /usr/include/freetype2 -std=gnu++20 -pthread -DWITH_GZFILEOP -o CMakeFiles/softRenderer.dir/application/image.cpp.o -c /home/zcli/code/learn-opengl/11-Transform/application/image.cpp",
+  "file": "/home/zcli/code/learn-opengl/11-Transform/application/image.cpp",
+  "output": "CMakeFiles/softRenderer.dir/application/image.cpp.o"
+},
+{
+  "directory": "/home/zcli/code/learn-opengl/11-Transform/000",
+  "command": "clang++ -I/home/zcli/code/learn-opengl/11-Transform -I/home/zcli/code/learn-opengl/11-Transform/global -I/home/zcli/code/learn-opengl/11-Transform/application -I/home/zcli/code/learn-opengl/11-Transform/gpu -I/home/zcli/code/learn-opengl/11-Transform/000 -isystem /home/zcli/code/learn-opengl/11-Transform/slint/include/slint -isystem /usr/include/freetype2 -std=gnu++20 -pthread -DWITH_GZFILEOP -o CMakeFiles/softRenderer.dir/gpu/gpu.cpp.o -c /home/zcli/code/learn-opengl/11-Transform/gpu/gpu.cpp",
+  "file": "/home/zcli/code/learn-opengl/11-Transform/gpu/gpu.cpp",
+  "output": "CMakeFiles/softRenderer.dir/gpu/gpu.cpp.o"
+},
+{
+  "directory": "/home/zcli/code/learn-opengl/11-Transform/000",
+  "command": "clang++ -I/home/zcli/code/learn-opengl/11-Transform -I/home/zcli/code/learn-opengl/11-Transform/global -I/home/zcli/code/learn-opengl/11-Transform/application -I/home/zcli/code/learn-opengl/11-Transform/gpu -I/home/zcli/code/learn-opengl/11-Transform/000 -isystem /home/zcli/code/learn-opengl/11-Transform/slint/include/slint -isystem /usr/include/freetype2 -std=gnu++20 -pthread -DWITH_GZFILEOP -o CMakeFiles/softRenderer.dir/gpu/frameBuffer.cpp.o -c /home/zcli/code/learn-opengl/11-Transform/gpu/frameBuffer.cpp",
+  "file": "/home/zcli/code/learn-opengl/11-Transform/gpu/frameBuffer.cpp",
+  "output": "CMakeFiles/softRenderer.dir/gpu/frameBuffer.cpp.o"
+},
+{
+  "directory": "/home/zcli/code/learn-opengl/11-Transform/000",
+  "command": "clang++ -I/home/zcli/code/learn-opengl/11-Transform -I/home/zcli/code/learn-opengl/11-Transform/global -I/home/zcli/code/learn-opengl/11-Transform/application -I/home/zcli/code/learn-opengl/11-Transform/gpu -I/home/zcli/code/learn-opengl/11-Transform/000 -isystem /home/zcli/code/learn-opengl/11-Transform/slint/include/slint -isystem /usr/include/freetype2 -std=gnu++20 -pthread -DWITH_GZFILEOP -o CMakeFiles/softRenderer.dir/gpu/raster.cpp.o -c /home/zcli/code/learn-opengl/11-Transform/gpu/raster.cpp",
+  "file": "/home/zcli/code/learn-opengl/11-Transform/gpu/raster.cpp",
+  "output": "CMakeFiles/softRenderer.dir/gpu/raster.cpp.o"
+},
+{
+  "directory": "/home/zcli/code/learn-opengl/11-Transform/000",
+  "command": "clang++ -I/home/zcli/code/learn-opengl/11-Transform -I/home/zcli/code/learn-opengl/11-Transform/global -I/home/zcli/code/learn-opengl/11-Transform/application -I/home/zcli/code/learn-opengl/11-Transform/gpu -I/home/zcli/code/learn-opengl/11-Transform/000 -isystem /home/zcli/code/learn-opengl/11-Transform/slint/include/slint -isystem /usr/include/freetype2 -std=gnu++20 -pthread -DWITH_GZFILEOP -o CMakeFiles/softRenderer.dir/slint_generated_main_1.cpp.o -c /home/zcli/code/learn-opengl/11-Transform/000/slint_generated_main_1.cpp",
+  "file": "/home/zcli/code/learn-opengl/11-Transform/000/slint_generated_main_1.cpp",
+  "output": "CMakeFiles/softRenderer.dir/slint_generated_main_1.cpp.o"
+},
+{
+  "directory": "/home/zcli/code/learn-opengl/11-Transform/000",
+  "command": "clang++ -I/home/zcli/code/learn-opengl/11-Transform -std=gnu++20 -o CMakeFiles/testMatrix.dir/testMatrix.cpp.o -c /home/zcli/code/learn-opengl/11-Transform/testMatrix.cpp",
+  "file": "/home/zcli/code/learn-opengl/11-Transform/testMatrix.cpp",
+  "output": "CMakeFiles/testMatrix.dir/testMatrix.cpp.o"
+}
+]
