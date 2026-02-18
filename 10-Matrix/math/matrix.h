@@ -35,10 +35,13 @@ namespace math {
 		Matrix33<T> operator*(const T& s) {
 			Matrix33<T> result;
 
+			// this->getColum(0)， 获取矩阵中的列向量
+			// 将每一个列向量和标量s相乘，得到新的列向量
 			auto col0 = this->getColum(0) * s;
 			auto col1 = this->getColum(1) * s;
 			auto col2 = this->getColum(2) * s;
 
+			// 填充数据到结果矩阵中
 			result.setColum(col0, 0);
 			result.setColum(col1, 1);
 			result.setColum(col2, 2);
@@ -54,6 +57,7 @@ namespace math {
 				);
 		}
 
+		// 设置矩阵中指定位置的元素值
 		void set(const uint32_t& row, const uint32_t& col, T t) {
 			assert(row < 3 && col < 3);
 			m[col * 3 + row] = t;
@@ -69,6 +73,7 @@ namespace math {
 			m[2] = m20; m[5] = m21; m[8] = m22;
 		}
 
+		// 单位矩阵设置方法，将当前矩阵转换为单位矩阵。
 		Matrix33<T> identity() {
 			set(
 				1, 0, 0,
@@ -79,14 +84,18 @@ namespace math {
 			return *this;
 		}
 
+		// 返回指定的列向量
 		Vector3<T> getColum(const uint32_t& col) const {
 			assert(col < 3);
 			return Vector3<T>(m[col * 3], m[col * 3 + 1], m[col * 3 + 2]);
 		}
 
+		// 设置指定的列向量
 		void setColum(const Vector3<T>& cvalue, const uint32_t& col) {
 			assert(col < 3);
-			m[col * 3] = cvalue.x; m[col * 3 + 1] = cvalue.y; m[col * 3 + 2] = cvalue.z;
+			m[col * 3] = cvalue.x; 
+			m[col * 3 + 1] = cvalue.y; 
+			m[col * 3 + 2] = cvalue.z;
 		}
 
 		void printMatrix() {
@@ -98,7 +107,12 @@ namespace math {
 		}
 
 	public:
-		T m[9] = { 1, 0, 0, 0, 1, 0, 0, 0, 1 };
+		T m[9] = 
+		{
+			 1, 0, 0, 
+			 0, 1, 0, 
+			 0, 0, 1 
+		};
 	};
 
 	/*
@@ -119,6 +133,7 @@ namespace math {
 			memcpy((void*)m, (void*)src.m, sizeof(T) * 16);
 		}
 
+		// 矩阵乘以标量
 		Matrix44<T> operator*(const T& s) {
 			Matrix44<T> result;
 
@@ -135,25 +150,30 @@ namespace math {
 			return result;
 		}
 
+		// 矩阵乘法
 		Vector4<T> operator*(const Vector4<T>& v) {
 			return Vector4(
-				v.x * m[0] + v.y * m[4] + v.z * m[8] + v.w * m[12],
-				v.x * m[1] + v.y * m[5] + v.z * m[9] + v.w * m[13],
-				v.x * m[2] + v.y * m[6] + v.z * m[10] + v.w * m[14],
-				v.x * m[3] + v.y * m[7] + v.z * m[11] + v.w * m[15]
+					v.x * m[0] + v.y * m[4] + v.z * m[8] + v.w * m[12],
+					v.x * m[1] + v.y * m[5] + v.z * m[9] + v.w * m[13],
+					v.x * m[2] + v.y * m[6] + v.z * m[10] + v.w * m[14],
+					v.x * m[3] + v.y * m[7] + v.z * m[11] + v.w * m[15]
 				);
 		}
 
+		// 获取指定位置的元素
 		T get(const uint32_t& row, const uint32_t& col) const {
 			assert(row < 4 && col < 4);
 			return m[col * 4 + row];
 		}
 
+		// 设置指定位置的元素
 		void set(const uint32_t& row, const uint32_t& col, T t) {
 			assert(row < 4 && col < 4);
 			m[col * 4 + row] = t;
 		}
 
+
+		// 设置矩阵中所有元素的值
 		void set(
 			T m00, T m01, T m02, T m03,
 			T m10, T m11, T m12, T m13,
@@ -166,6 +186,7 @@ namespace math {
 			m[3] = m30; m[7] = m31; m[11] = m32; m[15] = m33;
 		}
 
+		// 将当前矩阵转换为单位矩阵
 		Matrix44<T> identity() {
 			set(
 				1, 0, 0, 0,
