@@ -147,7 +147,6 @@ void Raster::interpolantTriangle(const Point& v0, const Point& v1, const Point& 
     auto pv0 = math::vec2f(v0.x - p.x, v0.y - p.y);
     auto pv1 = math::vec2f(v1.x - p.x, v1.y - p.y);
     auto pv2 = math::vec2f(v2.x - p.x, v2.y - p.y);
-    //计算v0的权重
 
     float v0Area = std::abs(math::cross(pv1, pv2));
     float v1Area = std::abs(math::cross(pv0, pv2));
@@ -157,10 +156,8 @@ void Raster::interpolantTriangle(const Point& v0, const Point& v1, const Point& 
     float weight1 = v1Area / sumArea;
     float weight2 = v2Area / sumArea;
 
-    //对于颜色的插值
     p.color = lerpRGBA(v0.color, v1.color, v2.color, weight0, weight1, weight2);
 
-    //对于uv坐标的插值
     p.uv = lerpUV(v0.uv, v1.uv, v2.uv, weight0, weight1, weight2);
 }
 

@@ -117,6 +117,7 @@ void GPU::setTextureWrap(uint32_t wrap) {
 RGBA GPU::sampleNearest(const math::vec2f& uv) {
     auto myUV = uv;
 
+    // 纹理寻址
     checkWrap(myUV.x);
     checkWrap(myUV.y);
 
@@ -145,7 +146,6 @@ RGBA GPU::sampleBilinear(const math::vec2f& uv) {
     int bottom = std::floor(y);
     int top = std::ceil(y);
 
-    //对上下插值，得到左右
     float yScale = 0.0f;
     if (top == bottom) {
         yScale = 1.0f;
@@ -162,7 +162,6 @@ RGBA GPU::sampleBilinear(const math::vec2f& uv) {
     RGBA leftColor = Raster::lerpRGBA(mImage->mData[positionLeftBottom], mImage->mData[positionLeftTop], yScale);
     RGBA rightColor = Raster::lerpRGBA(mImage->mData[positionRightBottom], mImage->mData[positionRightTop], yScale);
 
-    //对左右插值，得到结果
     float xScale = 0.0f;
     if (right == left) {
         xScale = 1.0f;
@@ -179,15 +178,16 @@ RGBA GPU::sampleBilinear(const math::vec2f& uv) {
 void GPU::checkWrap(float& n) {
     if (n > 1.0f || n < 0.0f) {
         n = FRACTION(n);
+
         switch (mWrap) {
-        case TEXTURE_WRAP_REPEAT:
-            n = FRACTION(n + 1);
-            break;
-        case TEXTURE_WRAP_MIRROR:
-            n = 1.0f - FRACTION(n + 1);
-            break;
-        default:
-            break;
+            case TEXTURE_WRAP_REPEAT:  
+                n = FRACTION(n + 1);
+                break;
+            case TEXTURE_WRAP_MIRROR:
+                n = 1.0f - FRACTION(n + 1);
+                break;
+            default:
+                break;
         }
     }
 }

@@ -41,6 +41,7 @@ static void prepare()
 {
     texture = Image::createImage("assets/textures/goku.jpg");
 
+    // p1, p2, p3
     p1.x = 0;
     p1.y = 0;
     p1.color = RGBA(255, 0, 0, 255);
@@ -56,6 +57,7 @@ static void prepare()
     p3.color = RGBA(0, 0, 255, 255);
     p3.uv = math::vec2f(1.0f, 0.0f);
 
+    // q1, q2, q3
     q1.x = 0;
     q1.y = 0;
     q1.color = RGBA(255, 0, 0, 255);
@@ -87,7 +89,8 @@ void Application::render()
 
     sgl->clear();
     sgl->setTexture(texture);
-    sgl->setTextureWrap(TEXTURE_WRAP_MIRROR);
+    // sgl->setTextureWrap(TEXTURE_WRAP_MIRROR);
+    sgl->setTextureWrap(TEXTURE_WRAP_REPEAT);
 
     sgl->drawTriangle(p1, p2, p3);
     sgl->drawTriangle(q1, q2, q3);
