@@ -1,0 +1,44 @@
+{
+    "files.associations": {
+        "*.slint": "slint"
+    },
+    "C_Cpp.intelliSenseEngine": "default",
+    "C_Cpp.autocomplete": "default",
+    "C_Cpp.errorSquiggles": "enabled",
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "cmake.configureOnOpen": false,
+    "cmake.buildDirectory": "${workspaceFolder}/build",
+    "cmake.generator": "Ninja",
+    "cmake.preferredGenerators": [
+        "Ninja"
+    ],
+    "cmake.configureArgs": [
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DCMAKE_C_COMPILER=clang",
+        "-DCMAKE_CXX_COMPILER=clang++",
+        "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+    ],
+    "cmake.buildArgs": [
+        "-j$(nproc)"
+    ],
+    "cmake.cmakePath": "/usr/bin/cmake",
+    "terminal.integrated.cwd": "${workspaceFolder}",
+    "terminal.integrated.env.linux": {
+        "CC": "clang",
+        "CXX": "clang++"
+    },
+    "files.exclude": {
+        "**/*.o": true,
+        "**/*.so": true,
+        "**/*.a": true,
+        "**/*.d": true,
+        "build/CMakeFiles": true,
+        "build/cmake_install.cmake": true,
+        "build/CMakeCache.txt": true,
+        "build/Makefile": true,
+        "build/.ninja_deps": true,
+        "build/.ninja_log": true
+    },
+    "debug.console.fontSize": 14,
+    "debug.console.lineHeight": 20
+}

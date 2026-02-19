@@ -1,0 +1,130 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "build",
+                "--config",
+                "Debug",
+                "-j$(nproc)"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"],
+            "detail": "Build the project using CMake + Ninja",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "configure",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "-S",
+                ".",
+                "-B",
+                "build",
+                "-G",
+                "Ninja",
+                "-DCMAKE_BUILD_TYPE=Debug",
+                "-DCMAKE_C_COMPILER=clang",
+                "-DCMAKE_CXX_COMPILER=clang++"
+            ],
+            "problemMatcher": [],
+            "detail": "Configure CMake project with Ninja + Clang",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "clean",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "build",
+                "--target",
+                "clean"
+            ],
+            "problemMatcher": [],
+            "detail": "Clean build artifacts"
+        },
+        {
+            "label": "rebuild",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "build",
+                "--config",
+                "Debug",
+                "--clean-first",
+                "-j$(nproc)"
+            ],
+            "group": "build",
+            "problemMatcher": ["$gcc"],
+            "detail": "Rebuild the project from scratch",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "build softRenderer",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "build",
+                "--target",
+                "softRenderer",
+                "--config",
+                "Debug",
+                "-j$(nproc)"
+            ],
+            "problemMatcher": ["$gcc"],
+            "detail": "Build only softRenderer target"
+        },
+        {
+            "label": "build testMatrix",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "build",
+                "--target",
+                "testMatrix",
+                "--config",
+                "Debug",
+                "-j$(nproc)"
+            ],
+            "problemMatcher": ["$gcc"],
+            "detail": "Build only testMatrix target"
+        },
+        {
+            "label": "run softRenderer",
+            "type": "shell",
+            "command": "${workspaceFolder}/build/softRenderer",
+            "dependsOn": ["build"],
+            "group": "test",
+            "detail": "Build and run softRenderer"
+        },
+        {
+            "label": "run testMatrix",
+            "type": "shell",
+            "command": "${workspaceFolder}/build/testMatrix",
+            "dependsOn": ["build"],
+            "group": "test",
+            "detail": "Build and run testMatrix"
+        }
+    ]
+}
