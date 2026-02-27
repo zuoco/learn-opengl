@@ -222,34 +222,32 @@ Matrix44<T> operator*(const Matrix44<T> &m1, const Matrix44<T> &m2) {
   return result;
 }
 
-// 求解逆矩阵
+// 求解逆矩阵: 伴随矩阵法
 
 /*
- * m0  m4  m8	  m12
- * m1  m5  m9	  m13
- * m2  m6  m10  m14
- * m3  m7  m11	m15
+ * m00  m01  m02	m03
+ * m10  m11  m12	m13
+ * m20  m21  m22  m23        // 索引从0开始
+ * m30  m31  m32	m33
  */
 template <typename T> Matrix44<T> inverse(const Matrix44<T> &src) {
   Matrix44<T> result(static_cast<T>(1));
 
-  T D_22_33 = src.get(2, 2) * src.get(3, 3) - src.get(2, 3) * src.get(3, 2);
+  // 计算每个必须的2*2矩阵行列式,下标是左上角到右下角
+  // 余子式的基本构件。它们后续会组合成 3×3 的代数余子式。
 
+  T D_22_33 = src.get(2, 2) * src.get(3, 3) - src.get(2, 3) * src.get(3, 2);
   T D_12_23 = src.get(1, 2) * src.get(2, 3) - src.get(1, 3) * src.get(2, 2);
   T D_12_33 = src.get(1, 2) * src.get(3, 3) - src.get(1, 3) * src.get(3, 2);
-
   T D_21_32 = src.get(2, 1) * src.get(3, 2) - src.get(2, 2) * src.get(3, 1);
   T D_21_33 = src.get(2, 1) * src.get(3, 3) - src.get(2, 3) * src.get(3, 1);
-
   T D_11_22 = src.get(1, 1) * src.get(2, 2) - src.get(1, 2) * src.get(2, 1);
   T D_11_23 = src.get(1, 1) * src.get(2, 3) - src.get(1, 3) * src.get(2, 1);
   T D_11_32 = src.get(1, 1) * src.get(3, 2) - src.get(1, 2) * src.get(3, 1);
   T D_11_33 = src.get(1, 1) * src.get(3, 3) - src.get(1, 3) * src.get(3, 1);
-
   T D_02_13 = src.get(0, 2) * src.get(1, 3) - src.get(0, 3) * src.get(1, 2);
   T D_02_23 = src.get(0, 2) * src.get(2, 3) - src.get(0, 3) * src.get(2, 2);
   T D_02_33 = src.get(0, 2) * src.get(3, 3) - src.get(0, 3) * src.get(3, 2);
-
   T D_01_12 = src.get(0, 1) * src.get(1, 2) - src.get(0, 2) * src.get(1, 1);
   T D_01_13 = src.get(0, 1) * src.get(1, 3) - src.get(0, 3) * src.get(1, 1);
   T D_01_22 = src.get(0, 1) * src.get(2, 2) - src.get(0, 2) * src.get(2, 1);
@@ -257,35 +255,67 @@ template <typename T> Matrix44<T> inverse(const Matrix44<T> &src) {
   T D_01_32 = src.get(0, 1) * src.get(3, 2) - src.get(0, 2) * src.get(3, 1);
   T D_01_33 = src.get(0, 1) * src.get(3, 3) - src.get(0, 3) * src.get(3, 1);
 
+  // 计算伴随阵的每列数据
   Vector4<T> col0, col1, col2, col3;
+  // 伴随矩阵的每一列中的元素 等于 原矩阵每一行的每个元素的代数余子式
 
+  
+  // m00 的代数余子式就是伴随矩阵的第一列的第1元素（因为求解伴随矩阵过程中涉及到矩阵的转置），求解代余子式使用了按列展开（m11  m21  m31）
   /*
-   * m5  m9	 m13
-   * m6  m10  m14
-   * m7  m11  m15
+   * m00  --   -- 	--
+   * --   m11  m12	m13
+   * --   m21  m22  m23
+   * --   m31  m32	m33
    */
-  col0.x = src.get(1, 1) * D_22_33 - src.get(2, 1) * D_12_33 + src.get(3, 1) * D_12_23;
-  col0.y = -(src.get(1, 0) * D_22_33 - src.get(2, 0) * D_12_33 + src.get(3, 0) * D_12_23);
-  col0.z = src.get(1, 0) * D_21_33 - src.get(2, 0) * D_11_33 + src.get(3, 0) * D_11_23;
-  col0.w = -(src.get(1, 0) * D_21_32 - src.get(2, 0) * D_11_32 + src.get(3, 0) * D_11_22);
+  // m00 的代数余子式的计算就是 m00 * （-1）^（i+j） * (3x3矩阵的行列式)
+  // 至于这个3x3矩阵的行列式，我们使用按列展开的方式是计算，这里使用了第一列。
+  col0.x = src.get(1, 1) * D_22_33 - src.get(2, 1) * D_12_33 + src.get(3, 1) * D_12_23; //
+  
+  
+  // m01 的代数余子式就是伴随矩阵的第一列的第2元素，求解代余子式使用了按列展开（m10  m20  m30）
+  /*
+   * ---   m01  ---  ---
+   * m10   ---  m12	 m13
+   * m20   ---  m22  m23
+   * m30   ---  m32	 m33
+   */
+  col0.y = -(src.get(1, 0) * D_22_33 - src.get(2, 0) * D_12_33 + src.get(3, 0) * D_12_23); //
+
+  // 其他以此类推
+  col0.z = src.get(1, 0) * D_21_33 - src.get(2, 0) * D_11_33 + src.get(3, 0) * D_11_23;// 
+  col0.w = -(src.get(1, 0) * D_21_32 - src.get(2, 0) * D_11_32 + src.get(3, 0) * D_11_22);//
+
   col1.x = -(src.get(0, 1) * D_22_33 - src.get(2, 1) * D_02_33 + src.get(3, 1) * D_02_23);
   col1.y = src.get(0, 0) * D_22_33 - src.get(2, 0) * D_02_33 + src.get(3, 0) * D_02_23;
   col1.z = -(src.get(0, 0) * D_21_33 - src.get(2, 0) * D_01_33 + src.get(3, 0) * D_01_23);
   col1.w = src.get(0, 0) * D_21_32 - src.get(2, 0) * D_01_32 + src.get(3, 0) * D_01_22;
-  col2.x = src.get(0, 1) * D_12_33 - src.get(1, 1) * D_02_33 + src.get(3, 1) * D_02_13;
-  col2.y = -(src.get(0, 0) * D_12_33 - src.get(1, 0) * D_02_33 +  src.get(3, 0) * D_02_13);
-  col2.z = src.get(0, 0) * D_11_33 - src.get(1, 0) * D_01_33 + src.get(3, 0) * D_01_13;
-  col2.w = -(src.get(0, 0) * D_11_32 - src.get(1, 0) * D_01_32 + src.get(3, 0) * D_01_12);
-  col3.x = -(src.get(0, 1) * D_12_23 - src.get(1, 1) * D_02_23 + src.get(2, 1) * D_02_13);
-  col3.y = src.get(0, 0) * D_12_23 - src.get(1, 0) * D_02_23 + src.get(2, 0) * D_02_13;
-  col3.z = -(src.get(0, 0) * D_11_23 - src.get(1, 0) * D_01_23 + src.get(2, 0) * D_01_13);
-  col3.w = src.get(0, 0) * D_11_22 - src.get(1, 0) * D_01_22 + src.get(2, 0) * D_01_12;
+
+  col2.x = src.get(0, 1) * D_12_33 - src.get(1, 1) * D_02_33 +src.get(3, 1) * D_02_13;
+  col2.y = -(src.get(0, 0) * D_12_33 - src.get(1, 0) * D_02_33 +
+             src.get(3, 0) * D_02_13);
+  col2.z = src.get(0, 0) * D_11_33 - src.get(1, 0) * D_01_33 +
+           src.get(3, 0) * D_01_13;
+  col2.w = -(src.get(0, 0) * D_11_32 - src.get(1, 0) * D_01_32 +
+             src.get(3, 0) * D_01_12);
+
+  col3.x = -(src.get(0, 1) * D_12_23 - src.get(1, 1) * D_02_23 +
+             src.get(2, 1) * D_02_13);
+  col3.y = src.get(0, 0) * D_12_23 - src.get(1, 0) * D_02_23 +
+           src.get(2, 0) * D_02_13;
+  col3.z = -(src.get(0, 0) * D_11_23 - src.get(1, 0) * D_01_23 +
+             src.get(2, 0) * D_01_13);
+  col3.w = src.get(0, 0) * D_11_22 - src.get(1, 0) * D_01_22 +
+           src.get(2, 0) * D_01_12;
+  
+  // 至此，伴随矩阵的4列都计算好了
+
 
   result.setColum(col0, 0);
   result.setColum(col1, 1);
   result.setColum(col2, 2);
   result.setColum(col3, 3);
 
+  // 计算行列式
   Vector4<T> row0(result.get(0, 0), result.get(0, 1), result.get(0, 2), result.get(0, 3));
   Vector4<T> colum0 = src.getColum(0);
   T determinant = dot(row0, colum0);
@@ -294,6 +324,7 @@ template <typename T> Matrix44<T> inverse(const Matrix44<T> &src) {
 
   T oneOverDeterminant = static_cast<T>(1) / determinant;
 
+  // 计算逆矩阵
   return result * oneOverDeterminant;
 }
 
