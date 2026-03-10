@@ -5,6 +5,11 @@
 #include <cstdint>
 #include "vector.h"
 
+
+//
+// 列主序
+// 
+
 namespace math {
 	template<typename T>
 	class Matrix44;

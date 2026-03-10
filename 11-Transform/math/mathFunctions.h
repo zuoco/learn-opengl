@@ -428,17 +428,27 @@ Matrix44<T> orthographic(T left, T right, T bottom, T top, T near, T far) {
   return result;
 }
 
+// fovy (field of view y): 垂直方向的视场角，单位是度
+// aspect (aspect ratio): 宽高比（通常是窗口宽度 / 窗口高度）
+// n (near): 近裁剪面距离（必须为正数）
+// f (far): 远裁剪面距离（必须为正数，且 f > n）
 template <typename T> Matrix44<T> perspective(T fovy, T aspect, T n, T f) {
 
+  // 计算视场角一半的正切
   T const tanHalfFovy = std::tan(DEG2RAD(fovy / static_cast<T>(2)));
 
   Matrix44<T> result(static_cast<T>(0));
+ 
+//  | 1/(aspect·tan(fovy/2))          0                0                0     |
+//  |         0                1/tan(fovy/2)           0                0     |
+//  |         0                      0           -(f+n)/(f-n)      -2fn/(f-n) |
+//  |         0                      0                -1                0     |
 
-  result.set(0, 0, static_cast<T>(1) / (aspect * tanHalfFovy));
-  result.set(1, 1, static_cast<T>(1) / (tanHalfFovy));
-  result.set(2, 2, -(f + n) / (f - n));
-  result.set(2, 3, -static_cast<T>(2) * f * n / (f - n));
-  result.set(3, 2, -static_cast<T>(1));
+  result.set(0, 0, static_cast<T>(1) / (aspect * tanHalfFovy)); // x方向缩放
+  result.set(1, 1, static_cast<T>(1) / (tanHalfFovy));          // y方向缩放
+  result.set(2, 2, -(f + n) / (f - n));                         // z映射系数
+  result.set(2, 3, -static_cast<T>(2) * f * n / (f - n));       // z平移
+  result.set(3, 2, -static_cast<T>(1));                         // 透视除法
   return result;
 }
 
