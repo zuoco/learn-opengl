@@ -328,6 +328,9 @@ template <typename T> Matrix44<T> inverse(const Matrix44<T> &src) {
   return result * oneOverDeterminant;
 }
 
+//
+// 缩放： 
+//
 template <typename T, typename V>
 Matrix44<T> scale(const Matrix44<T> &src, V x, V y, V z) {
   Matrix44<T> result;
@@ -337,9 +340,10 @@ Matrix44<T> scale(const Matrix44<T> &src, V x, V y, V z) {
   auto col2 = src.getColum(2);
   auto col3 = src.getColum(3);
 
-  col0 *= x;
-  col1 *= y;
-  col2 *= z;
+  // 缩放
+  col0 *= x;  // X轴缩放x倍
+  col1 *= y;  // Y轴缩放y倍
+  col2 *= z;  // Z轴缩放z倍
 
   result.setColum(col0, 0);
   result.setColum(col1, 1);
@@ -349,25 +353,37 @@ Matrix44<T> scale(const Matrix44<T> &src, V x, V y, V z) {
   return result;
 }
 
+
+//
+// 平移
+//
 template <typename T, typename V>
 Matrix44<T> translate(const Matrix44<T> &src, V x, V y, V z) {
   Matrix44<T> result(src);
-  auto col0 = src.getColum(0);
-  auto col1 = src.getColum(1);
-  auto col2 = src.getColum(2);
+  
+  auto col0 = src.getColum(0); // X轴方向的向量
+  auto col1 = src.getColum(1); // Y轴方向的向量
+  auto col2 = src.getColum(2); // Z轴方向的向量
   auto col3 = src.getColum(3);
 
-  Vector4<T> dstCol3 = col0 * x + col1 * y + col2 * z + col3;
-  result.setColum(dstCol3, 3);
+  // col0 * x ： X轴方向的平移
+  // col1 * y ： Y轴方向的平移
+  // col2 * z ： Z轴方向的平移
+  Vector4<T> dstCol3 = col0 * x + col1 * y + col2 * z + col3;  // 平移向量
+  result.setColum(dstCol3, 3); // 第四列用来保存平移向量
 
   return result;
 }
+
 
 template <typename T, typename V>
 Matrix44<T> translate(const Matrix44<T> &src, const Vector3<V> &v) {
   return translate(src, v.x, v.y, v.z);
 }
 
+//
+// 旋转：绕任意轴旋转的 4x4 变换矩阵，并将其右乘到输入矩阵 src 上，即计算 src * R
+//
 template <typename T>
 Matrix44<T> rotate(const Matrix44<T> &src, float angle, const Vector3<T> &v) {
   T const c = std::cos(angle);
@@ -399,9 +415,11 @@ Matrix44<T> rotate(const Matrix44<T> &src, float angle, const Vector3<T> &v) {
   auto srcCol2 = src.getColum(2);
   auto srcCol3 = src.getColum(3);
 
+  // 旋转： src * R
   auto col0 = srcCol0 * rCol0[0] + srcCol1 * rCol0[1] + srcCol2 * rCol0[2];
   auto col1 = srcCol0 * rCol1[0] + srcCol1 * rCol1[1] + srcCol2 * rCol1[2];
   auto col2 = srcCol0 * rCol2[0] + srcCol1 * rCol2[1] + srcCol2 * rCol2[2];
+  // 只对前三列做乘法（因为 Rotate 矩阵的第四列是 (0,0,0,1)）
   auto col3 = srcCol3;
 
   Matrix44<T> result(src);
