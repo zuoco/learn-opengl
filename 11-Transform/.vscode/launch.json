@@ -1,0 +1,63 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "调试 softRenderer (Clang + lldb)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build-clang/softRenderer",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}/build/build-clang",
+      "environment": [
+        {
+          "name": "WAYLAND_DISPLAY",
+          "value": "wayland-0"
+        }
+      ],
+      "externalConsole": false,
+      "MIMode": "lldb"
+    },
+    {
+      "name": "调试 softRenderer (GCC + gdb)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build-gcc/softRenderer",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}/build/build-gcc",
+      "environment": [
+        {
+          "name": "WAYLAND_DISPLAY",
+          "value": "wayland-0"
+        }
+      ],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb"
+    },
+    {
+      "name": "调试 testMatrix (Clang + lldb)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build-clang/testMatrix",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}/build/build-clang",
+      "externalConsole": false,
+      "MIMode": "lldb"
+    },
+    {
+      "name": "调试 testMatrix (GCC + gdb)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build-gcc/testMatrix",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}/build/build-gcc",
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb"
+    }
+  ]
+}

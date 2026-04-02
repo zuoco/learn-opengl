@@ -329,8 +329,14 @@ template <typename T> Matrix44<T> inverse(const Matrix44<T> &src) {
 }
 
 //
-// 缩放： 
+// 下面是缩放、平移、旋转的实现，两个函数的第一个参数都是 Matrix44<T> &src，
+// 缩放平移旋转都是叠加到这个矩阵上的，
+// 而这个矩阵本身是局坐标系的基向量矩阵(前三列表示局部坐标系的基向量(X、Y、Z方向)，第四列表示平移向量)。
 //
+
+/*
+ *  缩放： 在 4×4 变换矩阵上叠加缩放变换
+ */
 template <typename T, typename V>
 Matrix44<T> scale(const Matrix44<T> &src, V x, V y, V z) {
   Matrix44<T> result;
@@ -348,15 +354,23 @@ Matrix44<T> scale(const Matrix44<T> &src, V x, V y, V z) {
   result.setColum(col0, 0);
   result.setColum(col1, 1);
   result.setColum(col2, 2);
+  // 第四列是用于平移的，所以不变
   result.setColum(col3, 3);
 
   return result;
 }
 
 
-//
-// 平移
-//
+/*
+ *  输入参数： 
+ *  src：   4x4 变换矩阵，函数会在此基础上添加平移。
+ *  x,y,z:  表示沿着三维空间的 X、Y、Z 方向的平移量。
+ *
+ *  该实现产生的是局部坐标系下的平移（沿当前基向量方向）。
+ *  若要在世界坐标系中沿固定世界轴平移，应直接把世界轴向量乘以偏移量再加到 col3。
+ *  这是常见的 4×4 仿射变换表示法（使用齐次坐标把平移纳入矩阵运算）。
+ *
+ */
 template <typename T, typename V>
 Matrix44<T> translate(const Matrix44<T> &src, V x, V y, V z) {
   Matrix44<T> result(src);
@@ -366,10 +380,12 @@ Matrix44<T> translate(const Matrix44<T> &src, V x, V y, V z) {
   auto col2 = src.getColum(2); // Z轴方向的向量
   auto col3 = src.getColum(3);
 
-  // col0 * x ： X轴方向的平移
-  // col1 * y ： Y轴方向的平移
-  // col2 * z ： Z轴方向的平移
-  Vector4<T> dstCol3 = col0 * x + col1 * y + col2 * z + col3;  // 平移向量
+  // col0 * x ： 平移在X轴方向的分量
+  // col1 * y ： 平移在Y轴方向的分量
+  // col2 * z ： 平移在Z轴方向的分量
+
+  // 把沿局部 X/Y/Z 方向的位移（分别为 col0*x, col1*y, col2*z）加到当前的平移列 col3，得到新的平移向量。
+  Vector4<T> dstCol3 = col0 * x + col1 * y + col2 * z + col3; // 新的平移向量
   result.setColum(dstCol3, 3); // 第四列用来保存平移向量
 
   return result;
@@ -381,57 +397,65 @@ Matrix44<T> translate(const Matrix44<T> &src, const Vector3<V> &v) {
   return translate(src, v.x, v.y, v.z);
 }
 
-//
-// 旋转：绕任意轴旋转的 4x4 变换矩阵，并将其右乘到输入矩阵 src 上，即计算 src * R
-//
+
+/* 
+ * 在src上叠加旋转矩阵： 绕任意轴旋转的 4x4 变换矩阵，并将其右乘到输入矩阵 src 上，即计算 src * R
+ */
 template <typename T>
 Matrix44<T> rotate(const Matrix44<T> &src, float angle, const Vector3<T> &v) {
-  T const c = std::cos(angle);
-  T const s = std::sin(angle);
+    T const c = std::cos(angle);
+    T const s = std::sin(angle);
 
-  Vector3<T> axis = normalize(v);
-  Vector3<T> temp((T(1) - c) * axis);
+    Vector3<T> axis = normalize(v);
+    Vector3<T> temp((T(1) - c) * axis);
 
-  Matrix44<T> Rotate;
-  Rotate.set(0, 0, c + temp[0] * axis[0]);
-  Rotate.set(1, 0, temp[0] * axis[1] + s * axis[2]);
-  Rotate.set(2, 0, temp[0] * axis[2] - s * axis[1]);
+    // 构造旋转矩阵
+    Matrix44<T> Rotate;
+    Rotate.set(0, 0, c + temp[0] * axis[0]);
+    Rotate.set(1, 0, temp[0] * axis[1] + s * axis[2]);
+    Rotate.set(2, 0, temp[0] * axis[2] - s * axis[1]);
 
-  Rotate.set(0, 1, temp[1] * axis[0] - s * axis[2]);
-  Rotate.set(1, 1, c + temp[1] * axis[1]);
-  Rotate.set(2, 1, temp[1] * axis[2] + s * axis[0]);
+    Rotate.set(0, 1, temp[1] * axis[0] - s * axis[2]);
+    Rotate.set(1, 1, c + temp[1] * axis[1]);
+    Rotate.set(2, 1, temp[1] * axis[2] + s * axis[0]);
 
-  Rotate.set(0, 2, temp[2] * axis[0] + s * axis[1]);
-  Rotate.set(1, 2, temp[2] * axis[1] - s * axis[0]);
-  Rotate.set(2, 2, c + temp[2] * axis[2]);
+    Rotate.set(0, 2, temp[2] * axis[0] + s * axis[1]);
+    Rotate.set(1, 2, temp[2] * axis[1] - s * axis[0]);
+    Rotate.set(2, 2, c + temp[2] * axis[2]);
 
-  auto rCol0 = Rotate.getColum(0);
-  auto rCol1 = Rotate.getColum(1);
-  auto rCol2 = Rotate.getColum(2);
-  auto rCol3 = Rotate.getColum(3);
+    auto rCol0 = Rotate.getColum(0);
+    auto rCol1 = Rotate.getColum(1);
+    auto rCol2 = Rotate.getColum(2);
+    auto rCol3 = Rotate.getColum(3);
 
-  auto srcCol0 = src.getColum(0);
-  auto srcCol1 = src.getColum(1);
-  auto srcCol2 = src.getColum(2);
-  auto srcCol3 = src.getColum(3);
+    // 提取输入矩阵 src 的列向量，用于后续的旋转变换计算
+    auto srcCol0 = src.getColum(0);
+    auto srcCol1 = src.getColum(1);
+    auto srcCol2 = src.getColum(2);
+    auto srcCol3 = src.getColum(3);
 
-  // 旋转： src * R
-  auto col0 = srcCol0 * rCol0[0] + srcCol1 * rCol0[1] + srcCol2 * rCol0[2];
-  auto col1 = srcCol0 * rCol1[0] + srcCol1 * rCol1[1] + srcCol2 * rCol1[2];
-  auto col2 = srcCol0 * rCol2[0] + srcCol1 * rCol2[1] + srcCol2 * rCol2[2];
-  // 只对前三列做乘法（因为 Rotate 矩阵的第四列是 (0,0,0,1)）
-  auto col3 = srcCol3;
+    // 三个方向（X、Y、Z）上应用旋转： src * R
+    auto col0 = srcCol0 * rCol0[0] + srcCol1 * rCol0[1] + srcCol2 * rCol0[2];
+    auto col1 = srcCol0 * rCol1[0] + srcCol1 * rCol1[1] + srcCol2 * rCol1[2];
+    auto col2 = srcCol0 * rCol2[0] + srcCol1 * rCol2[1] + srcCol2 * rCol2[2];
+    auto col3 = srcCol3; // 这一列是是平移向量，不受旋转影响
 
-  Matrix44<T> result(src);
+    Matrix44<T> result(src);
 
-  result.setColum(col0, 0);
-  result.setColum(col1, 1);
-  result.setColum(col2, 2);
-  result.setColum(col3, 3);
+    result.setColum(col0, 0);
+    result.setColum(col1, 1);
+    result.setColum(col2, 2);
+    result.setColum(col3, 3);
 
-  return result;
+    return result;
 }
 
+
+
+/* 
+ *  构造一个正交投影矩阵（4×4），将视景体（view volume）从相机/视图坐标系映射到标准化设备坐标（NDC）。
+ *  函数的六个输入参数共同定义了裁剪体的左右、上下和近远平面位置，从而决定缩放和平移变换。
+ */
 template <typename T>
 Matrix44<T> orthographic(T left, T right, T bottom, T top, T near, T far) {
   Matrix44<T> result(static_cast<T>(1));
@@ -445,6 +469,7 @@ Matrix44<T> orthographic(T left, T right, T bottom, T top, T near, T far) {
 
   return result;
 }
+
 
 // fovy (field of view y): 垂直方向的视场角，单位是度
 // aspect (aspect ratio): 宽高比（通常是窗口宽度 / 窗口高度）

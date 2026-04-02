@@ -35,11 +35,11 @@ if(_IMPORT_PREFIX STREQUAL "/")
   set(_IMPORT_PREFIX "")
 endif()
 
-add_library(slint_cpp-static STATIC IMPORTED)
-set_target_properties(slint_cpp-static PROPERTIES IMPORTED_LOCATION;${_IMPORT_PREFIX}/lib/libslint_cpp.a)
+add_library(slint_cpp-shared SHARED IMPORTED)
+set_target_properties(slint_cpp-shared PROPERTIES IMPORTED_LOCATION;${_IMPORT_PREFIX}/lib/libslint_cpp.so;IMPORTED_NO_SONAME;TRUE)
 
 function(_slint_download_compiler_and_cache)
-    set(SLINT_GITHUB_RELEASE "v1.15.0" CACHE STRING "GitHub Release to use for Slint Binary Artifact Downloads")
+    set(SLINT_GITHUB_RELEASE "v1.15.1" CACHE STRING "GitHub Release to use for Slint Binary Artifact Downloads")
 
     if (CMAKE_HOST_WIN32)
         set(compiler_exe_suffix ".exe")
@@ -86,5 +86,5 @@ set(_IMPORT_PREFIX)
 
 include("${CMAKE_CURRENT_LIST_DIR}/SlintTargets.cmake")
 
-set(SLINT_STYLE fluent CACHE STRING "The Slint widget style")
+set(SLINT_STYLE qt CACHE STRING "The Slint widget style")
 set_property(GLOBAL PROPERTY SLINT_STYLE ${SLINT_STYLE})

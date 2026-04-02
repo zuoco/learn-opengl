@@ -1,0 +1,62 @@
+{
+    "version": 3,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 21,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "clang-ninja",
+            "displayName": "Clang + Ninja",
+            "description": "使用 Clang 编译器和 Ninja 生成器",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build-clang",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "clang",
+                "CMAKE_CXX_COMPILER": "clang++",
+                "CMAKE_CXX_STANDARD": "20",
+                "CMAKE_CXX_STANDARD_REQUIRED": "ON",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            }
+        },
+        {
+            "name": "gcc-ninja",
+            "displayName": "GCC + Ninja",
+            "description": "使用 GCC 编译器和 Ninja 生成器",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build-gcc",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_CXX_COMPILER": "g++",
+                "CMAKE_CXX_STANDARD": "20",
+                "CMAKE_CXX_STANDARD_REQUIRED": "ON",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "build-clang",
+            "displayName": "Clang + Ninja 构建",
+            "description": "使用 Clang 编译器和 Ninja 生成器构建项目",
+            "configurePreset": "clang-ninja"
+        },
+        {
+            "name": "build-gcc",
+            "displayName": "GCC + Ninja 构建",
+            "description": "使用 GCC 编译器和 Ninja 生成器构建项目",
+            "configurePreset": "gcc-ninja"
+        }
+    ]
+}

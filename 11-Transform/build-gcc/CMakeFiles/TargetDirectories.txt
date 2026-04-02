@@ -1,0 +1,4 @@
+/home/zcli/learn/learn-opengl/11-Transform/build-gcc/CMakeFiles/softRenderer.dir
+/home/zcli/learn/learn-opengl/11-Transform/build-gcc/CMakeFiles/testMatrix.dir
+/home/zcli/learn/learn-opengl/11-Transform/build-gcc/CMakeFiles/edit_cache.dir
+/home/zcli/learn/learn-opengl/11-Transform/build-gcc/CMakeFiles/rebuild_cache.dir

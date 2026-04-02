@@ -17,15 +17,23 @@
 #define SLINT_VERSION_MINOR 15
 /// This macro expands to the to the numeric value of the patch version of Slint you're
 /// developing against. For example if you're using version 1.5.2, this macro will expand to 2.
-#define SLINT_VERSION_PATCH 0
+#define SLINT_VERSION_PATCH 1
 /// This macro expands to the string representation of the version of Slint you're developing against.
 /// For example if you're using version 1.5.2, this macro will expand to "1.5.2".
-#define SLINT_VERSION_STRING "1.15.0"
+#define SLINT_VERSION_STRING "1.15.1"
 
+///This macro is defined when Slint was configured with the SLINT_FEATURE_INTERPRETER flag enabled
+#define SLINT_FEATURE_INTERPRETER
+///This macro is defined when Slint was configured with the SLINT_FEATURE_LIVE_PREVIEW flag enabled
+#define SLINT_FEATURE_LIVE_PREVIEW
+///This macro is defined when Slint was configured with the SLINT_FEATURE_TESTING flag enabled
+#define SLINT_FEATURE_TESTING
+///This macro is defined when Slint was configured with the SLINT_FEATURE_BACKEND_QT flag enabled
+#define SLINT_FEATURE_BACKEND_QT
 ///This macro is defined when Slint was configured with the SLINT_FEATURE_BACKEND_WINIT flag enabled
 #define SLINT_FEATURE_BACKEND_WINIT
-///This macro is defined when Slint was configured with the SLINT_FEATURE_BACKEND_LINUXKMS flag enabled
-#define SLINT_FEATURE_BACKEND_LINUXKMS
+///This macro is defined when Slint was configured with the SLINT_FEATURE_BACKEND_LINUXKMS_NOSEAT flag enabled
+#define SLINT_FEATURE_BACKEND_LINUXKMS_NOSEAT
 ///This macro is defined when Slint was configured with the SLINT_FEATURE_RENDERER_FEMTOVG flag enabled
 #define SLINT_FEATURE_RENDERER_FEMTOVG
 ///This macro is defined when Slint was configured with the SLINT_FEATURE_RENDERER_SKIA flag enabled
