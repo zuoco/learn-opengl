@@ -1,0 +1,38 @@
+export component AppWindow inherits Window {
+    in-out property <image> frame_image;
+    
+    pure callback mouse-pressed(int, int);
+    pure callback mouse-released(int, int);
+    pure callback mouse-moved(int, int);
+    
+    pure callback key-pressed(string);
+    pure callback key-released(string);
+    
+    width: 800px;
+    height: 600px;
+    title: "softRenderer";
+    background: #000;
+    
+    FocusScope {
+        key-pressed(event) => { root.key-pressed(event.text); accept }
+        key-released(event) => { root.key-released(event.text); accept }
+        
+        TouchArea {
+            moved => { root.mouse-moved(self.mouse-x / 1px, self.mouse-y / 1px); }
+            pointer-event(event) => {
+                if (event.button == PointerEventButton.right && event.kind == PointerEventKind.down) {
+                    root.mouse-pressed(self.mouse-x / 1px, self.mouse-y / 1px);
+                } else if (event.button == PointerEventButton.right && event.kind == PointerEventKind.up) {
+                    root.mouse-released(self.mouse-x / 1px, self.mouse-y / 1px);
+                }
+            }
+            
+            Image {
+                width: 100%;
+                height: 100%;
+                source: root.frame_image;
+                image-rendering: pixelated;
+            }
+        }
+    }
+}

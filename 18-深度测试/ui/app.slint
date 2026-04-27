@@ -1,0 +1,14 @@
+export component AppWindow inherits Window {
+    in property <image> rendered-image;
+
+    width: 800px;
+    height: 600px;
+    title: "Soft Renderer - Depth Test";
+
+    Image {
+        width: parent.width;
+        height: parent.height;
+        source: root.rendered-image;
+        image-rendering: pixelated;
+    }
+}

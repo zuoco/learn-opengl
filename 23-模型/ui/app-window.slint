@@ -1,0 +1,36 @@
+export component AppWindow inherits Window {
+    in property <image> render-image;
+
+    callback key-pressed(string);
+    callback key-released(string);
+    callback pointer-moved(length, length);
+    callback pointer-pressed(length, length);
+    callback pointer-released(length, length);
+
+    width: 1200px;
+    height: 900px;
+
+    Image {
+        source: root.render-image;
+        width: 100%;
+        height: 100%;
+    }
+
+    TouchArea {
+        width: 100%;
+        height: 100%;
+        moved => { root.pointer-moved(self.mouse-x, self.mouse-y); }
+        pointer-event(event) => {
+            if event.button == PointerEventButton.left && event.kind == PointerEventKind.down {
+                root.pointer-pressed(self.mouse-x, self.mouse-y);
+            } else if event.button == PointerEventButton.left && event.kind == PointerEventKind.up {
+                root.pointer-released(self.mouse-x, self.mouse-y);
+            }
+        }
+    }
+
+    FocusScope {
+        key-pressed(event) => { root.key-pressed(event.text); return accept; }
+        key-released(event) => { root.key-released(event.text); return accept; }
+    }
+}

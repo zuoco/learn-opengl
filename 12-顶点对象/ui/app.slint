@@ -1,0 +1,14 @@
+export component AppWindow inherits Window {
+    in property <image> render-image;
+
+    width: 800px;
+    height: 600px;
+    title: "softRenderer";
+
+    Image {
+        width: parent.width;
+        height: parent.height;
+        source: root.render-image;
+        image-rendering: pixelated;
+    }
+}

@@ -1,0 +1,16 @@
+{
+  "cmake.configureOnOpen": false,
+  "cmake.useCMakePresets": "always",
+  "cmake.pinnedCommands": [],
+  "cmake.configureArgs": [],
+  "cmake.showConfigureCommand": true,
+  "cmake.allowCommentsInPresets": true,
+  "cmake.ignoreKitEnv": false,
+  "cmake.preferredGenerators": ["Ninja"],
+  "cmake.buildDirectory": "",
+  "cmake.sourceDirectory": "${workspaceFolder}",
+  "cmake.defaultVariants": {
+    "buildType": "debug"
+  },
+  "peacock.remoteColor": "#61dafb"
+}

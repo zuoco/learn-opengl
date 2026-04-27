@@ -1,0 +1,13 @@
+export component AppWindow inherits Window {
+    in property <image> framebuffer-image;
+    title: "Software Renderer - CullFace";
+    width: 800px;
+    height: 600px;
+
+    Image {
+        width: parent.width;
+        height: parent.height;
+        source: root.framebuffer-image;
+        image-rendering: pixelated;
+    }
+}
